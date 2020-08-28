@@ -14,6 +14,35 @@ namespace UndirectedGraph
             Vertexes = new List<Vertex<T>>();
         }
 
+        public List<T> BreadthFirst()
+        {
+
+            List<Vertex<T>> list = new List<Vertex<T>>();
+            List<QueueFrame<T>> frames = new List<QueueFrame<T>>();
+            Queue<QueueFrame<T>> queue = new Queue<QueueFrame<T>>();
+
+            foreach(Vertex<T> vertex in Vertexes)
+            {
+                frames.Add(new QueueFrame<T>(vertex));
+            }
+
+            QueueFrame<T> currentFrame;
+            queue.Enqueue(frames[0]);
+            while (queue.Count != 0)
+            {
+                currentFrame = queue.Dequeue();
+                list.Add(currentFrame.Vertex);
+
+                foreach (Vertex<T> vertex in currentFrame.Vertex.Edges)
+                {
+                    if (frames[currentFrame.Vertex.Edges.FindIndex(vertex)])
+                    {
+                        queue.Enqueue(vertex);
+                    }
+                }
+            }
+        }
+
         public Vertex<T> FindVertex(T value)
         {
             foreach (Vertex<T> vertex in Vertexes)
