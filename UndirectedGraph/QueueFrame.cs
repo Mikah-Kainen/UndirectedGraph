@@ -6,12 +6,12 @@ namespace UndirectedGraph
 {
     class QueueFrame<T>
     {
-        public bool wasVisisted;
+        public bool wasVisited;
         public Vertex<T> Vertex;
 
         public QueueFrame(Vertex<T> vertex)
         {
-            wasVisisted = false;
+            wasVisited = false;
             this.Vertex = vertex;
         }
     }
