@@ -34,6 +34,88 @@ namespace UndirectedGraph
             return list;
         }
 
+        public List<T> BreathFirst(T value)
+        {
+                List<T> returnList = new List<T>();
+                Vertex<T> currentVertex = FindVertex(value);
+
+                if (currentVertex == null)
+                {
+                    return null;
+                }
+                List<Vertex<T>> wasVisited = new List<Vertex<T>>();
+                Queue<Vertex<T>> vertices = new Queue<Vertex<T>>();
+                vertices.Enqueue(currentVertex);
+
+                while (vertices.Count != 0 && currentVertex != null)
+                {
+                    if (!wasVisited.Contains(currentVertex))
+                    {
+                        returnList.Add(currentVertex.Value);
+                        wasVisited.Add(currentVertex);
+                    }
+
+                    foreach (Vertex<T> edge in currentVertex.Edges)
+                    {
+                        if (!wasVisited.Contains(edge))
+                        {
+                            vertices.Enqueue(edge);
+                        }
+                    }
+
+                    currentVertex = vertices.Dequeue();
+                }
+
+                return returnList;
+        }
+
+        public List<T> DeapthFirst(T value)
+        {
+            List<T> returnList = new List<T>();
+            Vertex<T> currentVertex = FindVertex(value);
+
+            if(currentVertex == null)
+            {
+                return null;
+            }
+            List<Vertex<T>> wasVisited = new List<Vertex<T>>();
+            Stack<Vertex<T>> vertices = new Stack<Vertex<T>>();
+            vertices.Push(currentVertex);
+
+            while(vertices.Count != 0 && currentVertex != null)
+            {
+                if(!wasVisited.Contains(currentVertex))
+                {
+                    returnList.Add(currentVertex.Value);
+                    wasVisited.Add(currentVertex);
+                }
+
+                foreach(Vertex<T> edge in currentVertex.Edges)
+                {
+                    if(!wasVisited.Contains(edge))
+                    {
+                        vertices.Push(edge);
+                    }
+                }
+                List<Vertex<T>> stackStuff = new List<Vertex<T>>();
+                foreach(Vertex<T> edge in currentVertex.Edges)
+                {
+                    if(!wasVisited.Contains(edge))
+                    {
+                        stackStuff.Add(vertices.Pop());
+                    }
+                }
+                foreach(Vertex<T> vertex in stackStuff)
+                {
+                    vertices.Push(vertex);
+                }
+
+                currentVertex = vertices.Pop();
+            }
+
+            return returnList;
+        }
+
         private void dfsRecursive(Vertex<T> node, List<T> list, List<Vertex<T>> visited)
         {
             if (node == null)
@@ -54,72 +136,58 @@ namespace UndirectedGraph
                     dfsRecursive(neighbor, list, visited);
                 }
             }
-
-
         }
 
 
-        public List <Vertex<T>> BreathFirst(T value)
-        {
-            if(Vertexes[0] == null)
-            {
-                return null;
-            }
-
-            Vertex<T> targetVertex = FindVertex(value);
-            List<Vertex<T>> returnList = new List<Vertex<T>>();
-            List<QueueFrame<T>> frames = new List<QueueFrame<T>>();
-            Queue<QueueFrame<T>> queue = new Queue<QueueFrame<T>>();
-
-            foreach(Vertex<T> vertex in Vertexes)
-            {
-                frames.Add(new QueueFrame<T>(vertex));
-            }
-
-            QueueFrame<T> currentFrame = frames[Vertexes.FindIndex(vert => vert == targetVertex)];
-            queue.Enqueue(currentFrame);
-            currentFrame.wasVisited = true;
-            while (queue.Count != 0)
-            {
-                currentFrame = queue.Dequeue();
-                returnList.Add(currentFrame.Vertex);
-
-                int index;
-                foreach (Vertex<T> vertex in currentFrame.Vertex.Edges)
-                {
-                    //index = Vertexes.FindIndex(currentFrame.Vertex); wrong
-                    //index = Vertexes.FindIndex(vert => vert == currentFrame.Vertex);
-                    index = Vertexes.FindIndex((Vertex<T> vert) =>
-                   {
-                       if (vert == currentFrame.Vertex)
-                       {
-                           return true;
-                       }
-
-                       return false;
-                   });
-
-
-                    if (frames[index].wasVisited == false)
-                    {
-                        frames[index].wasVisited = true;
-                        queue.Enqueue(frames[index]);
-                    }
-                }
-            }
-            return returnList;
-        }
-
-        //public List<Vertex<T>> DepthFirst()
+        //public List <Vertex<T>> BreathFirst(T value)
         //{
         //    if(Vertexes[0] == null)
         //    {
         //        return null;
         //    }
 
+        //    Vertex<T> targetVertex = FindVertex(value);
         //    List<Vertex<T>> returnList = new List<Vertex<T>>();
-        //    List<StackFrame<T>> frames = new List<StackFrame<T>>();
-        //    Stack<StackFrame<T>> stack = new Stack<StackFrame<T>>();
+        //    List<QueueFrame<T>> frames = new List<QueueFrame<T>>();
+        //    Queue<QueueFrame<T>> queue = new Queue<QueueFrame<T>>();
+
+        //    foreach(Vertex<T> vertex in Vertexes)
+        //    {
+        //        frames.Add(new QueueFrame<T>(vertex));
+        //    }
+
+        //    QueueFrame<T> currentFrame = frames[Vertexes.FindIndex(vert => vert == targetVertex)];
+        //    queue.Enqueue(currentFrame);
+        //    currentFrame.wasVisited = true;
+        //    while (queue.Count != 0)
+        //    {
+        //        currentFrame = queue.Dequeue();
+        //        returnList.Add(currentFrame.Vertex);
+
+        //        int index;
+        //        foreach (Vertex<T> vertex in currentFrame.Vertex.Edges)
+        //        {
+        //            //index = Vertexes.FindIndex(currentFrame.Vertex); wrong
+        //            //index = Vertexes.FindIndex(vert => vert == currentFrame.Vertex);
+        //            index = Vertexes.FindIndex((Vertex<T> vert) =>
+        //           {
+        //               if (vert == currentFrame.Vertex)
+        //               {
+        //                   return true;
+        //               }
+
+        //               return false;
+        //           });
+
+
+        //            if (frames[index].wasVisited == false)
+        //            {
+        //                frames[index].wasVisited = true;
+        //                queue.Enqueue(frames[index]);
+        //            }
+        //        }
+        //    }
+        //    return returnList;
         //}
 
         public Vertex<T> FindVertex(T value)

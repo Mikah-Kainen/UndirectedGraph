@@ -26,16 +26,18 @@ namespace UndirectedGraph
             graph.AddVertex(32);
             graph.AddVertex(23);
             graph.AddVertex(86);
-            graph.Connect(23, 32);
-            graph.Connect(5, 23);
             graph.Connect(5, 25);
-            graph.Connect(25, 23);
+            graph.Connect(25, 32);
+            graph.Connect(5, 23);
             graph.Connect(5, 86);
+            graph.Connect(32, 86);
+            graph.AddVertex(100);
+            graph.Connect(86, 100);
 
-            List<Vertex<int>> list = graph.BreathFirst(5);
+            List<int> list = graph.DeapthFirst(5);
+            var listq = graph.BreathFirst(5);
 
-
-            //var dfs = graph.DFS(5);
+            var dfs = graph.DFS(5);
         }
     }
 }
