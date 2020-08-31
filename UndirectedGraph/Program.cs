@@ -29,13 +29,15 @@ namespace UndirectedGraph
             graph.Connect(5, 25);
             graph.Connect(25, 32);
             graph.Connect(5, 23);
-            graph.Connect(5, 86);
             graph.Connect(32, 86);
             graph.AddVertex(100);
             graph.Connect(86, 100);
+            graph.Connect(23, 100);
 
             List<int> list = graph.DeapthFirst(5);
             var listq = graph.BreathFirst(5);
+
+            var array = graph.ShortestPathBfs(23, 32);
 
             var dfs = graph.DFS(5);
         }

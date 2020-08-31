@@ -139,56 +139,51 @@ namespace UndirectedGraph
         }
 
 
-        //public List <Vertex<T>> BreathFirst(T value)
-        //{
-        //    if(Vertexes[0] == null)
-        //    {
-        //        return null;
-        //    }
+        public List<T> ShortestPathBfs(T startingValue, T targetValue)
+        {
+            Vertex<T> startingVertex = FindVertex(startingValue);
+            if(startingVertex == null)
+            {
+                return null;
+            }
 
-        //    Vertex<T> targetVertex = FindVertex(value);
-        //    List<Vertex<T>> returnList = new List<Vertex<T>>();
-        //    List<QueueFrame<T>> frames = new List<QueueFrame<T>>();
-        //    Queue<QueueFrame<T>> queue = new Queue<QueueFrame<T>>();
+            List<T> returnList = new List<T>();
+            List<Vertex<T>> wasVisited = new List<Vertex<T>>();
+            Vertex<T>[] parents = new Vertex<T>[Vertexes.Count];
 
-        //    foreach(Vertex<T> vertex in Vertexes)
-        //    {
-        //        frames.Add(new QueueFrame<T>(vertex));
-        //    }
+            Queue<Vertex<T>> queue = new Queue<Vertex<T>>();
+            queue.Enqueue(startingVertex);
+            
+            Vertex<T> currentVertex = startingVertex;
+            parents[Vertexes.IndexOf(startingVertex)] = null;
+            do
+            {
+                if (!wasVisited.Contains(currentVertex))
+                {
+                    wasVisited.Add(currentVertex);
+                    returnList.Add(currentVertex.Value);
+                }
 
-        //    QueueFrame<T> currentFrame = frames[Vertexes.FindIndex(vert => vert == targetVertex)];
-        //    queue.Enqueue(currentFrame);
-        //    currentFrame.wasVisited = true;
-        //    while (queue.Count != 0)
-        //    {
-        //        currentFrame = queue.Dequeue();
-        //        returnList.Add(currentFrame.Vertex);
+                foreach (Vertex<T> edge in currentVertex.Edges)
+                {
+                    if (!wasVisited.Contains(edge))
+                    {
+                        queue.Enqueue(edge);
+                        parents[Vertexes.IndexOf(edge)] = currentVertex;
+                    }
+                }
 
-        //        int index;
-        //        foreach (Vertex<T> vertex in currentFrame.Vertex.Edges)
-        //        {
-        //            //index = Vertexes.FindIndex(currentFrame.Vertex); wrong
-        //            //index = Vertexes.FindIndex(vert => vert == currentFrame.Vertex);
-        //            index = Vertexes.FindIndex((Vertex<T> vert) =>
-        //           {
-        //               if (vert == currentFrame.Vertex)
-        //               {
-        //                   return true;
-        //               }
+                currentVertex = queue.Dequeue();
+            } while (!currentVertex.Value.Equals(targetValue) && queue.Count > 0 && currentVertex != null);
 
-        //               return false;
-        //           });
-
-
-        //            if (frames[index].wasVisited == false)
-        //            {
-        //                frames[index].wasVisited = true;
-        //                queue.Enqueue(frames[index]);
-        //            }
-        //        }
-        //    }
-        //    return returnList;
-        //}
+            returnList.Clear();
+            while(currentVertex != null)
+            {
+                returnList.Add(currentVertex.Value);
+                currentVertex = parents[Vertexes.IndexOf(currentVertex)];
+            }
+            return returnList;
+        }
 
         public Vertex<T> FindVertex(T value)
         {
